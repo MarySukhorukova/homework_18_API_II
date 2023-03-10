@@ -24,7 +24,7 @@ def reqres():
     return BaseSession(api_url)
 
 
-@pytest.fixture(scope='function', autouse=True)
+@pytest.fixture(scope='session', autouse=True)
 def browser_base_url(demoshop):
     browser.config.base_url = WEB_URL
     browser.config.window_width = 1920
