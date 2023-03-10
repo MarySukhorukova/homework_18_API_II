@@ -1,66 +1,59 @@
+import os
+
 from allure_commons._allure import step
 from dotenv import load_dotenv
 from selene import have, be
 from selene.support.shared import browser
 
-from tests.conftest import login
 
 load_dotenv()
+login = os.getenv("LOGIN")
 
 
-def test_login():
+def test_login(auth_via_api):
 
-    browser.open("")
+    auth_via_api.open("")
 
     with step("Verify successful authorization"):
-        browser.element(".account").should(have.text(login))
+        auth_via_api.element(".account").should(have.text(login))
 
 
-def test_open_product_card():
+def test_open_product_card(auth_via_api):
 
-    browser.open("/smartphone")
+    auth_via_api.open("/smartphone")
 
     with step("Verify cart product open"):
-        browser.element('input.product-box-add-to-cart-button').click()
-        browser.element('div.product-name').should(be.visible)
+        auth_via_api.element('input.product-box-add-to-cart-button').click()
+        auth_via_api.element('div.product-name').should(be.visible)
 
 
-def test_successful_search():
+def test_successful_search(auth_via_api):
 
-    browser.open("")
-    browser.element('[value="Search store"]').type('14.1-inch Laptop').press_enter()
-
-    with step("Verify product found"):
-        browser.element('.product-title').should(have.text('14.1-inch Laptop'))
-
-
-def test_unsuccessful_search():
-
-    browser.open("")
-    browser.element('[value="Search store"]').type('Lapptop').press_enter()
+    auth_via_api.open("")
+    auth_via_api.element('[value="Search store"]').type('14.1-inch Laptop').press_enter()
 
     with step("Verify product found"):
-        browser.element('.search-results').should(have.text('No products were found that matched your criteria.'))
+        auth_via_api.element('.product-title').should(have.text('14.1-inch Laptop'))
 
 
-def test_add_product_to_cart():
+def test_unsuccessful_search(auth_via_api):
 
-    browser.open("/computing-and-internet")
-    browser.element('input#add-to-cart-button-13').click()
-    browser.element('li#topcartlink > a').click()
-    browser.driver.refresh()
+    auth_via_api.open("")
+    auth_via_api.element('[value="Search store"]').type('Lapptop').press_enter()
 
-    browser.element('td.product > a').should(have.text('Computing and Internet'))
-
-    browser.element('td.remove-from-cart > input').click()
-    browser.element('input.update-cart-button').click()
-    browser.element('.order-summary-content').should(have.text('Your Shopping Cart is empty!'))
+    with step("Verify product found"):
+        auth_via_api.element('.search-results').should(have.text('No products were found that matched your criteria.'))
 
 
+def test_add_product_to_cart(auth_via_api):
 
+    auth_via_api.open("/computing-and-internet")
+    auth_via_api.element('input#add-to-cart-button-13').click()
+    auth_via_api.element('li#topcartlink > a').click()
+    auth_via_api.driver.refresh()
 
+    auth_via_api.element('td.product > a').should(have.text('Computing and Internet'))
 
-
-
-
-
+    auth_via_api.element('td.remove-from-cart > input').click()
+    auth_via_api.element('input.update-cart-button').click()
+    auth_via_api.element('.order-summary-content').should(have.text('Your Shopping Cart is empty!'))
