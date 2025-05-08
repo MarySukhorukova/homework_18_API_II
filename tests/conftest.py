@@ -8,7 +8,6 @@ from utils.base_session import BaseSession
 
 load_dotenv()
 
-
 @pytest.fixture(scope="session")
 def demoshop():
     web_url = os.getenv("WEB_URL")
@@ -29,9 +28,7 @@ def auth_via_api(demoshop):
     response = demoshop.post("/login", json={"Email": os.getenv("LOGIN"), "Password": os.getenv("PASSWORD")},
                              allow_redirects=False)
     authorization_cookie = response.cookies.get("NOPCOMMERCE.AUTH")
-
     browser.open("/Themes/DefaultClean/Content/images/logo.png")
-
     browser.driver.add_cookie({"name": "NOPCOMMERCE.AUTH", "value": authorization_cookie})
-
     return browser
+    
